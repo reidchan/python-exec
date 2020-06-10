@@ -1,0 +1,13 @@
+{
+  "name": "python-exec",
+  "version": "0.0.1-beta",
+  "main": "src/index.js",
+  "repository": "https://github.com/super2god/python-exec.git",
+  "author": "super2god <910147606@qq.com>",
+  "keywords": [
+    "nodejs",
+    "python",
+    "shell"
+  ],
+  "license": "MIT"
+}
