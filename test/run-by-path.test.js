@@ -1,5 +1,5 @@
 const path = require('path');
-const { runByPath } = require('../src');
+const { runByPath } = require('../dist');
 
 (async () => {
   try {

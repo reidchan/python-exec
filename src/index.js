@@ -12,7 +12,7 @@ async function _execPython (pythonPath, params = []) {
       }
     }
     const { stdout, stderr } = spawnSync('python', spwanParmas, {
-      encoding: 'utf-8'
+      encoding: 'utf8'
     });
     if (stdout) {
       return stdout;
