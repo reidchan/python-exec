@@ -1,9 +1,36 @@
+# Python Executer
+
 <img width="100" src="https://super-github.oss-cn-shenzhen.aliyuncs.com/package/python-exec.png"/>
 
 <p>
-  <img src="https://img.shields.io/badge/version-0.0.2%20-ff69b4.svg"/>
+  <img src="https://img.shields.io/badge/version-0.0.5%20-ff69b4.svg"/>
   <img src="https://img.shields.io/packagist/l/doctrine/orm.svg"/>
 </p>
+
+> run python scripts and get results back
+
+**No english document yet. just read code plz, it isn't that much.**
+
+## Get Started
+
+## 中文说明
+```typescript
+import { execByText } from 'python-exec';
+
+async function main () {
+  const result = await execByText(`print(42);`);
+  console.log('Answer to the Ultimate Question of Life, The Universe, and Everything =>', result);
+}
+
+try {
+  await main();
+  // Answer to the Ultimate Question of Life, The Universe, and Everything => 42
+} catch (error) {
+  throw error
+}
+```
+
+## Chiness / 中文
 
 > 执行python脚本并返回结果。
 
