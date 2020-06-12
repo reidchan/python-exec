@@ -1,9 +1,14 @@
-const { spawnSync, execSync } = require('child_process');
-const fs = require('fs')
-const os = require('os');
-const path = require('path');
+import { spawnSync, execSync } from 'child_process';
+import { unlink, writeFile } from 'fs'
+import { tmpdir } from 'os'
+import { join } from 'path'
 
-async function _runPython (pythonPath, params = [], { command, type }) {
+export interface ProgramOptions {
+  command?: string
+  type?: string
+}
+
+async function _runPython(pythonPath: string, params: string[] = [], { command, type }: ProgramOptions) {
   try {
     if (type === 'exec') {
       const files = pythonPath.split('/');
@@ -26,7 +31,7 @@ async function _runPython (pythonPath, params = [], { command, type }) {
           spwanParmas.push(param);
         }
       }
-      const { stdout, stderr } = spawnSync(command, spwanParmas, {
+      const { stdout, stderr } = spawnSync(command as string, spwanParmas, {
         encoding: 'utf8'
       });
       if (stdout) {
@@ -48,7 +53,7 @@ function _getFileName() {
   return timestamp.substring(timestamp.length - 6) + random;
 }
 
-async function _handleResult(path, params, options) {
+async function _handleResult(path: string, params: string[], options: ProgramOptions) {
   try {
     const result = await _runPython(path, params, options);
     return result;
@@ -59,7 +64,7 @@ async function _handleResult(path, params, options) {
   }
 }
 
-const _runByPath = async (path, params = [], options) => {
+const _runByPath = async (path: string, params: string[] = [], options: ProgramOptions) => {
   try {
     return await _handleResult(path, params, options);
   } catch (error) {
@@ -67,64 +72,81 @@ const _runByPath = async (path, params = [], options) => {
   }
 }
 
-const _runByText = async (text, params = [], options) => {
+const writeFileAsync = (path: string, content: string) => {
+  return new Promise((resolve, reject) => {
+    writeFile(path, content, (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    });
+  })
+}
+
+const unlinkAsync = (path: string) => {
+  return new Promise((resolve, reject) => {
+    unlink(path, err => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    });
+  })
+}
+
+const _runByText = async (text: string, params: string[] = [], options: ProgramOptions) => {
   const fileName = _getFileName()
-  const tmpPath = path.join(os.tmpdir(), `${fileName}.py`);
-  fs.writeFileSync(tmpPath, text);
+  const tmpPath = join(tmpdir(), `${fileName}.py`);
+  try {
+    await writeFileAsync(tmpPath, text);
+  } catch (error) {
+    throw error;
+  }
   try {
     return await _runByPath(tmpPath, params, options);
   } catch (error) {
     throw error;
   } finally {
     if (tmpPath) {
-      fs.unlink(tmpPath, error => {
-        if (error) {
-          throw error;
-        }
-      });
+      try {
+        await unlinkAsync(tmpPath)
+      } catch (error) {
+        throw error
+      }
     }
   }
 }
 
-const execByPath = async (path, params = []) => {
+export const execByPath = async (path: string, params: string[] = []) => {
   return await _runByPath(path, params, { command: 'python', type: 'exec' });
 }
 
-const execByText = async (text, params = []) => {
+export const execByText = async (text: string, params: string[] = []) => {
   return await _runByText(text, params, { command: 'python', type: 'exec' });
 }
 
-const spawnByPath = async (path, params = []) => {
+export const spawnByPath = async (path: string, params: string[] = []) => {
   return await _runByPath(path, params, { command: 'python', type: 'spawn' });
 }
 
-const spawnByText = async (text, params = []) => {
+export const spawnByText = async (text: string, params: string[] = []) => {
   return await _runByText(text, params, { command: 'python', type: 'spawn' });
 }
 
-const execByPath3 = async (path, params = []) => {
+export const execByPath3 = async (path: string, params: string[] = []) => {
   return await _runByPath(path, params, { command: 'python3', type: 'exec' });
 }
 
-const execByText3 = async (text, params = []) => {
+export const execByText3 = async (text: string, params: string[] = []) => {
   return await _runByText(text, params, { command: 'python3', type: 'exec' });
 }
 
-const spawnByPath3 = async (path, params = []) => {
+export const spawnByPath3 = async (path: string, params: string[] = []) => {
   return await _runByPath(path, params, { command: 'python3', type: 'spawn' });
 }
 
-const spawnByText3 = async (text, params = []) => {
+export const spawnByText3 = async (text: string, params: string[] = []) => {
   return await _runByText(text, params, { command: 'python3', type: 'spawn' });
-}
-
-module.exports = {
-  execByText,
-  execByPath,
-  spawnByText,
-  spawnByPath,
-  execByText3,
-  execByPath3,
-  spawnByText3,
-  spawnByPath3
 }
