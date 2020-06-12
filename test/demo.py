@@ -1,4 +1,4 @@
-import os;
-import sys;
-print('hello world');
-print("argv =>", sys.argv);
+import os
+filename = './hello.txt'
+with open(filename, 'w') as file_object:
+  file_object.write('hello guy')
