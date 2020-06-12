@@ -1,5 +1,5 @@
 const path = require('path');
-const { execByPath, execByPath3, spawnByPath, spawnByPath3 } = require('../src');
+const { execByPath, execByPath3, spawnByPath, spawnByPath3 } = require('.');
 
 (async () => {
   console.log('execByPath...');

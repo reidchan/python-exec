@@ -1,4 +1,4 @@
-const { execByText, execByText3, spawnByText, spawnByText3 } = require('../src');
+const { execByText, execByText3, spawnByText, spawnByText3 } = require('.');
 
 (async () => {
   console.log('execByText...');
