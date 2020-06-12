@@ -13,7 +13,6 @@
 
 ## Get Started
 
-## 中文说明
 ```typescript
 import { execByText } from 'python-exec';
 
